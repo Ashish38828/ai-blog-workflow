@@ -2,8 +2,10 @@
 from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.memory import MemorySaver
 
-# [LANGCHAIN] Importing the specific LLM wrapper for OpenAI.
+# Import all three model providers
 from langchain_openai import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 from core.state import AgentState
 from agents.researcher import ResearchAgent
@@ -12,15 +14,18 @@ from agents.editor import EditorAgent
 
 class BlogWorkflow:
     def __init__(self):
-        # [LANGCHAIN] We initialize the connection to OpenAI once...
-        self.llm = ChatOpenAI(model="gpt-4o", temperature=0.5)
+        # Initialize the actual connections to all three providers
+        self.openai_llm = ChatOpenAI(model="gpt-4o", temperature=0.5)
+        self.claude_llm = ChatAnthropic(model="claude-3-5-sonnet-latest", temperature=0.5)
+        self.gemini_llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro", temperature=0.5)
         
-        # ...and pass that same connection down to all our agents.
-        self.researcher = ResearchAgent(self.llm)
-        self.writer = WriterAgent(self.llm)
-        self.editor = EditorAgent(self.llm)
+        # Pass all three to the Researcher
+        self.researcher = ResearchAgent(self.openai_llm, self.claude_llm, self.gemini_llm)
         
-        # Build and compile the LangGraph workflow.
+        # The Writer and Editor can still use GPT-4o as their reasoning engine
+        self.writer = WriterAgent(self.openai_llm)
+        self.editor = EditorAgent(self.openai_llm)
+        
         self.app = self._build_graph()
 
     def _routing_logic(self, state: AgentState):
