@@ -6,8 +6,8 @@ This repository demonstrates a stateful, multi-agent AI workflow using **LangGra
 
 This system is built as a **Cyclic Graph**, meaning it can loop and self-correct rather than just moving in a straight line. 
 
-1. **Researcher Agent (Multi-Model Router):** Takes a topic and makes simultaneous, live API calls to **OpenAI (GPT-4o)**, **Anthropic (Claude 3.5 Sonnet)**, and **Google (Gemini 1.5 Pro)** to gather distinct, platform-specific context.
-2. **Writer Agent:** Ingests the aggregated research from all three platforms and synthesizes it into a cohesive blog draft.
+1. **Researcher Agent (Multi-Model Router):** Takes a topic and makes simultaneous, live API calls to **OpenAI (GPT-4o)**, **Anthropic (Claude 3.7 Sonnet)**, and **Google (Gemini 2.5 Pro)** to gather distinct, cutting-edge context.
+2. **Writer Agent:** Ingests the aggregated research from all three platforms and synthesizes it into a cohesive blog draft using GPT-4o.
 3. **Human-in-the-Loop (HITL):** LangGraph explicitly pauses execution. A human can read the draft and provide manual feedback to force a rewrite.
 4. **Editor Agent:** If the human skips manual review, the strict AI Editor evaluates the draft. 
 5. **Cyclic Routing:** If either the human or the AI Editor rejects the draft, the workflow loops back to the Writer Agent, passing along the critical feedback so the Writer can improve the next iteration.
