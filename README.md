@@ -6,8 +6,8 @@ This repository demonstrates a stateful, multi-agent AI workflow using **LangGra
 
 This system is built as a **Cyclic Graph**, meaning it can loop and self-correct rather than just moving in a straight line. 
 
-1. **Researcher Agent:** Takes a topic and makes real LLM calls to gather context from the perspectives of OpenAI, Anthropic Claude, and Google Gemini.
-2. **Writer Agent:** Ingests the aggregated research and synthesizes it into a cohesive blog draft.
+1. **Researcher Agent (Multi-Model Router):** Takes a topic and makes simultaneous, live API calls to **OpenAI (GPT-4o)**, **Anthropic (Claude 3.5 Sonnet)**, and **Google (Gemini 1.5 Pro)** to gather distinct, platform-specific context.
+2. **Writer Agent:** Ingests the aggregated research from all three platforms and synthesizes it into a cohesive blog draft.
 3. **Human-in-the-Loop (HITL):** LangGraph explicitly pauses execution. A human can read the draft and provide manual feedback to force a rewrite.
 4. **Editor Agent:** If the human skips manual review, the strict AI Editor evaluates the draft. 
 5. **Cyclic Routing:** If either the human or the AI Editor rejects the draft, the workflow loops back to the Writer Agent, passing along the critical feedback so the Writer can improve the next iteration.
@@ -23,7 +23,7 @@ ai-blog-workflow/
 │   └── state.py            # Global memory dictionary (AgentState)
 │
 ├── agents/
-│   ├── researcher.py       # LLM data gathering logic
+│   ├── researcher.py       # Multi-LLM API routing logic
 │   ├── writer.py           # LangChain drafting logic
 │   └── editor.py           # LangChain evaluation logic
 │
@@ -36,14 +36,14 @@ ai-blog-workflow/
 └── README.md               # Project documentation
 ```
 
-* **LangChain** is used inside the `agents/` directory to format prompts, connect to OpenAI, and invoke responses.
+* **LangChain** is used inside the `agents/` directory to format prompts and connect to the OpenAI, Anthropic, and Google APIs.
 * **LangGraph** is used in the `workflow/` directory to manage the global state, track memory, and route the data between the agents.
 
 ## 🚀 Setup & Execution
 
 ### Prerequisites
 * Python 3.9+
-* An active OpenAI API Key
+* API Keys for OpenAI, Anthropic, and Google Gemini
 
 ### 1. Clone the repository
 ```bash
@@ -57,9 +57,11 @@ pip install -r requirements.txt
 ```
 
 ### 3. Configure Environment Variables
-Create a file named `.env` in the root directory (you can copy the `.env.example` file) and add your OpenAI API key:
+Create a file named `.env` in the root directory (you can copy the `.env.example` file) and add your API keys:
 ```env
-OPENAI_API_KEY=sk-your-actual-api-key-here
+OPENAI_API_KEY=sk-your-openai-key-here
+ANTHROPIC_API_KEY=sk-your-anthropic-key-here
+GEMINI_API_KEY=AIzaSy-your-google-key-here
 ```
 
 ### 4. Run the Workflow
@@ -68,9 +70,9 @@ Execute the main script to start the agentic loop:
 python main.py
 ```
 
-Watch the terminal as the agents research and draft the content. The console will pause and prompt you when the draft is ready for Human-in-the-Loop review!
+Watch the terminal as the Researcher Agent pings the different APIs. The console will pause and prompt you when the draft is ready for Human-in-the-Loop review!
 
 ## 🛠️ Built With
 * [LangGraph](https://python.langchain.com/docs/langgraph/) - For stateful multi-agent orchestration.
 * [LangChain](https://python.langchain.com/) - For LLM communication and prompt structuring.
-* [OpenAI](https://openai.com/) - GPT-4o used as the reasoning engine for all agents.
+* [OpenAI / Anthropic / Google] - Powering the underlying reasoning and research engines.
