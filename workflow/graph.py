@@ -17,7 +17,7 @@ class BlogWorkflow:
         # Initialize the actual connections to all three providers
         self.openai_llm = ChatOpenAI(model="gpt-4o", temperature=0.5)
         self.claude_llm = ChatAnthropic(model="claude-3-5-sonnet-latest", temperature=0.5)
-        self.gemini_llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro", temperature=0.5)
+        self.gemini_llm = ChatGoogleGenerativeAI(model="gemini-2.5-pro", temperature=0.5)
         
         # Pass all three to the Researcher
         self.researcher = ResearchAgent(self.openai_llm, self.claude_llm, self.gemini_llm)
