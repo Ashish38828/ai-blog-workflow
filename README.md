@@ -124,6 +124,3 @@ Llama 3.1 provides an incredibly stable and versatile foundation for enterprises
 * [LangGraph](https://python.langchain.com/docs/langgraph/) - For stateful multi-agent orchestration.
 * [LangChain](https://python.langchain.com/) - For LLM communication and prompt structuring.
 * [Ollama](https://ollama.com/) - For secure, local model inference.
-* [LangGraph](https://python.langchain.com/docs/langgraph/) - For stateful multi-agent orchestration.
-* [LangChain](https://python.langchain.com/) - For LLM communication and prompt structuring.
-* [Ollama](https://ollama.com/) - For secure, local model inference.
