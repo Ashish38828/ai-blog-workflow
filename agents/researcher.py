@@ -1,8 +1,11 @@
 from langchain_core.messages import SystemMessage, HumanMessage
 from core.state import AgentState
+from core.logger import get_logger
+
+# Initialize the logger for this specific file
+logger = get_logger(__name__)
 
 class ResearchAgent:
-    # Removed deepseek_llm from the parameters
     def __init__(self, openai_llm, claude_llm, gemini_llm, local_deepseek, local_llama):
         self.llm_map = {
             "OpenAI": openai_llm,
@@ -18,13 +21,13 @@ class ResearchAgent:
         )
 
     def __call__(self, state: AgentState):
-        print("\n--- [RESEARCHERS] Gathering Data (3 Cloud APIs, 2 Local Models) ---")
+        logger.info("--- [RESEARCHERS] Gathering Data (3 Cloud APIs, 2 Local Models) ---")
         topic = state.get("topic", "the requested topic")
         
         research_data = {}
         
         for model_name, target_llm in self.llm_map.items():
-            print(f"  -> Sending prompt to: {model_name}...")
+            logger.info(f"Sending prompt to: {model_name}...")
             
             messages = [
                 SystemMessage(content=self.system_prompt.format(model_name=model_name)),
@@ -34,5 +37,5 @@ class ResearchAgent:
             response = target_llm.invoke(messages)
             research_data[model_name] = response.content.strip()
             
-        print("  -> All 5 models successfully queried.")
+        logger.info("All 5 models successfully queried.")
         return {"research_data": research_data, "iterations": state.get("iterations", 0)}
