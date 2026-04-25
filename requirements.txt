@@ -3,4 +3,6 @@ langchain-core
 langchain-openai
 langchain-anthropic
 langchain-google-genai
+langchain-deepseek
+langchain-ollama
 python-dotenv
