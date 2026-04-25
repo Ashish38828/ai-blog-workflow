@@ -5,7 +5,6 @@ from langgraph.checkpoint.memory import MemorySaver
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_deepseek import ChatDeepSeek
 from langchain_ollama import ChatOllama
 
 from core.state import AgentState
@@ -19,24 +18,24 @@ class BlogWorkflow:
         self.openai_llm = ChatOpenAI(model="gpt-4o", temperature=0.5)
         self.claude_llm = ChatAnthropic(model="claude-3-7-sonnet-latest", temperature=0.5)
         self.gemini_llm = ChatGoogleGenerativeAI(model="gemini-2.5-pro", temperature=0.5)
-        self.deepseek_llm = ChatDeepSeek(model="deepseek-chat", temperature=0.5)
         
-        # Initializing local Ollama instance (Make sure 'ollama serve' is running)
-        self.ollama_llm = ChatOllama(model="llama3", temperature=0.5)
-        
+        # Initializing local Ollama instances (Make sure 'ollama serve' is running)
+        self.local_deepseek = ChatOllama(model="deepseek-r1", temperature=0.5)
+        self.local_llama = ChatOllama(model="llama3.1", temperature=0.5)
+
         # Pass all FIVE models to the Researcher
         self.researcher = ResearchAgent(
             self.openai_llm, 
             self.claude_llm, 
             self.gemini_llm,
-            self.deepseek_llm,
-            self.ollama_llm
+            self.local_deepseek,
+            self.local_llama
         )
-        
-        # The Writer and Editor continue to use GPT-4o
+
+        # The Writer and Editor will use GPT-4o
         self.writer = WriterAgent(self.openai_llm)
         self.editor = EditorAgent(self.openai_llm)
-        
+         
         self.app = self._build_graph()
 
     def _routing_logic(self, state: AgentState):
