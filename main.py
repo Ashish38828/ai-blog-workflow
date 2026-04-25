@@ -13,13 +13,13 @@ def main():
     
     # LangGraph requires a thread_id to track memory and state pauses
     config = {"configurable": {"thread_id": "blog_run_001"}}
-    
+
     initial_state = {
-        "topic": "The Enterprise Shift: Moving from Linear AI to Multi-Agent Workflows",
+        "topic": "A comparative analysis of GPT-4o, Claude 3.7 Sonnet, Gemini 2.5 Pro, DeepSeek-R1, and Llama 3.1. Prepare a summary detailing the core strengths of each, and provide a clear recommendation on which LLM an enterprise should use for specific purposes.",
         "iterations": 0,
         "feedback": ""
     }
-    
+
     logger.info(f"Invoking graph for topic: '{initial_state['topic']}'")
     
     # 1. Run the workflow until it hits the `interrupt_before=["editor"]` breakpoint
