@@ -2,10 +2,11 @@
 from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.memory import MemorySaver
 
-# Import all three model providers
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_deepseek import ChatDeepSeek
+from langchain_ollama import ChatOllama
 
 from core.state import AgentState
 from agents.researcher import ResearchAgent
@@ -14,15 +15,25 @@ from agents.editor import EditorAgent
 
 class BlogWorkflow:
     def __init__(self):
-        # Initialize the actual connections to all three providers
+        # Initializing cloud APIs
         self.openai_llm = ChatOpenAI(model="gpt-4o", temperature=0.5)
         self.claude_llm = ChatAnthropic(model="claude-3-7-sonnet-latest", temperature=0.5)
         self.gemini_llm = ChatGoogleGenerativeAI(model="gemini-2.5-pro", temperature=0.5)
+        self.deepseek_llm = ChatDeepSeek(model="deepseek-chat", temperature=0.5)
         
-        # Pass all three to the Researcher
-        self.researcher = ResearchAgent(self.openai_llm, self.claude_llm, self.gemini_llm)
+        # Initializing local Ollama instance (Make sure 'ollama serve' is running)
+        self.ollama_llm = ChatOllama(model="llama3", temperature=0.5)
         
-        # The Writer and Editor can still use GPT-4o as their reasoning engine
+        # Pass all FIVE models to the Researcher
+        self.researcher = ResearchAgent(
+            self.openai_llm, 
+            self.claude_llm, 
+            self.gemini_llm,
+            self.deepseek_llm,
+            self.ollama_llm
+        )
+        
+        # The Writer and Editor continue to use GPT-4o
         self.writer = WriterAgent(self.openai_llm)
         self.editor = EditorAgent(self.openai_llm)
         
