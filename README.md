@@ -1,4 +1,4 @@
-# Enterprise Multi-Agent AI Orchestrator (LangGraph)
+# Enterprise Multi-Agent AI Orchestrator (LangChain & LangGraph)
 
 This repository demonstrates a stateful, production-ready multi-agent AI workflow using **LangGraph** and **LangChain**. It coordinates distinct AI personas to autonomously research, draft, and edit technical content, featuring a Human-in-the-Loop (HITL) breakpoint and a hybrid architecture that routes tasks across both public cloud APIs and secure, local open-weight models.
 
